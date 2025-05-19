@@ -5,6 +5,8 @@ use serde_json::Value;
 pub fn parse_args() -> Option<HashMap<String, String>> {
     let args: Vec<String> = env::args().collect();
 
+    println!("Parsing command line arguments...");
+
     for arg in args {
         if arg.starts_with("--pattern=") {
             let json_str = arg.trim_start_matches("--pattern=");
@@ -31,6 +33,7 @@ pub fn parse_args() -> Option<HashMap<String, String>> {
                         };
                         pattern_map.insert(key, value_str);
                     }
+                    println!("Successfully parsed JSON pattern: {:?}", pattern_map);
                     return Some(pattern_map);
                 },
                 Err(e) => {
@@ -38,37 +41,35 @@ pub fn parse_args() -> Option<HashMap<String, String>> {
                     eprintln!("Make sure your JSON format is correct, example: --pattern='{{\"<package_name>\": \"test_app\"}}'");
 
                     // Alternative parsing for simple key-value formats
-                    if json_str.contains(':') {
-                        println!("Trying alternative parsing method...");
-                        let mut pattern_map = HashMap::new();
+                    println!("Trying alternative parsing method...");
+                    let mut pattern_map = HashMap::new();
 
-                        // Remove outer braces if present
-                        let clean_str = json_str
-                            .trim_start_matches('{')
-                            .trim_end_matches('}')
-                            .trim();
+                    // Remove outer braces if present
+                    let clean_str = json_str
+                        .trim_start_matches('{')
+                        .trim_end_matches('}')
+                        .trim();
 
-                        // Split by comma for multiple key-value pairs
-                        for pair in clean_str.split(',') {
-                            if let Some((key, value)) = pair.split_once(':') {
-                                let clean_key = key
-                                    .trim()
-                                    .trim_matches('"')
-                                    .trim_matches('\'');
+                    // Split by comma for multiple key-value pairs
+                    for pair in clean_str.split(',') {
+                        if let Some((key, value)) = pair.split_once(':') {
+                            let clean_key = key
+                                .trim()
+                                .trim_matches('"')
+                                .trim_matches('\'');
 
-                                let clean_value = value
-                                    .trim()
-                                    .trim_matches('"')
-                                    .trim_matches('\'');
+                            let clean_value = value
+                                .trim()
+                                .trim_matches('"')
+                                .trim_matches('\'');
 
-                                pattern_map.insert(clean_key.to_string(), clean_value.to_string());
-                            }
+                            pattern_map.insert(clean_key.to_string(), clean_value.to_string());
                         }
+                    }
 
-                        if !pattern_map.is_empty() {
-                            println!("Alternative parsing successful!");
-                            return Some(pattern_map);
-                        }
+                    if !pattern_map.is_empty() {
+                        println!("Alternative parsing successful: {:?}", pattern_map);
+                        return Some(pattern_map);
                     }
 
                     return None;
@@ -77,5 +78,6 @@ pub fn parse_args() -> Option<HashMap<String, String>> {
         }
     }
 
+    println!("No --pattern argument found");
     None
 }

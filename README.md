@@ -34,6 +34,7 @@ This tool allows you to copy a template directory structure and replace placehol
 │       └── parse_args.rs       # Argument parsing logic
 └── bin/
     └── copier_template.rs      # Setup script
+    └── reset.rs                # Reset files and folders
 ```
 
 ## Getting Started
@@ -41,7 +42,7 @@ This tool allows you to copy a template directory structure and replace placehol
 ### Prerequisites
 
 - Rust and Cargo installed
-- Your template files placed in `src/templates/example/`
+- Make and place your template files in `src/templates/example/`
 
 ### Installation
 
@@ -54,7 +55,8 @@ This tool allows you to copy a template directory structure and replace placehol
    cargo build
    ```
 
-### Usage
+## Usage
+### Setup
 
 First, set up the template copier:
 
@@ -64,50 +66,30 @@ cargo run --bin copier_template
 
 This will process your template files in `src/templates/example` and generate the necessary code to recreate them.
 
-#### Development/Testing Only
-
-```
-cargo run -- --pattern='{"<the_patterns>": "<replace_patterns>"}'
-```
-
-#### Build and Run
-
+### Build
+After copied template to rust file, now you can build to get executable files.
 ```
 cargo build --release
-./target/release/rust_template_copier --pattern='{"<the_patterns>": "<replace_patterns>"}'
 ```
 
-#### Windows CMD:
-
-```
-cargo build --release
-.\target\release\rust_template_copier.exe --pattern="{\"<the_patterns>\": \"replace_patterns\"}"
-```
-
-#### Alternative Simplified Format:
-
-```
-cargo build --release
-./target/release/rust_template_copier --pattern={<the_patterns>: replace_patterns}
-```
-
-#### Alternative Methods (Without Cargo)
-
-After building the project, you can:
-
-1. **Copy the executable to your PATH**:
+### Optional
+1. #### Development/Testing Only
    ```
-   cp ./target/release/rust_template_copier /usr/local/bin/  # Linux/macOS
+   cargo run --bin generate_template -- --pattern='{"<the_pattern>": "<replace_pattern>"}' [optional]
    ```
-   Then use directly:
+   For Windows CMD:<br>
    ```
-   rust_template_copier --pattern='{"<the_patterns>": "<replace_patterns>"}'
+   cargo run -- --pattern="{\"<package_name>\": \"test_app\"}" [optional]
    ```
-
-2. **Use as a standalone tool**:
-   Copy the executable to any location and run:
+   Alternative simple format:<br>
    ```
-   /path/to/rust_template_copier --pattern='{"<the_patterns>": "<replace_patterns>"}'
+   cargo run -- --pattern="{<package_name>: test_app}" [optional]
+   ```
+   That commands will be generate file and folder di root project!<br>
+   If still failures, try run on powershell.
+2. #### Reset and remove files and folders
+   ```
+   cargo run --bin reset --development [optional] --with_example [optional]
    ```
 
 ## Placeholder Pattern
@@ -123,7 +105,7 @@ After building the project, you can:
 2. Add files with placeholders like:
    `{"val_to_replace": "replace_val"}`
    Based on JSON.
-4. Run `cargo run --bin copier_template` to process the template
+4. Run `cargo run --bin generate_template` to process the template
 5. Use the main application with your desired placeholder values
 
 ## Features

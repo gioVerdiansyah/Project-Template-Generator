@@ -151,7 +151,7 @@ fn process_directory(
             impl_content.push_str("    let mut replaced_content = content.to_string();\n\n");
 
             impl_content.push_str("    // Replace patterns\n");
-            impl_content.push_str("    for (key, value) in patterns {\n");
+            impl_content.push_str("    for (key, value) in patterns.iter() {\n");
             impl_content.push_str("        replaced_content = replaced_content.replace(key, &value);\n");
             impl_content.push_str("    }\n\n");
 
@@ -268,11 +268,6 @@ mod templates;
 mod utils;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        print_usage();
-        std::process::exit(1);
-    }
     println!("\n===== CREATING TEMPLATE =====");
 
     match parse_args::parse_args() {
@@ -291,33 +286,24 @@ fn main() {
             };
         },
         None => {
-            eprintln!("No valid --pattern argument provided.");
-            print_usage();
-            std::process::exit(1);
+            println!("Warning: no argument used!");
+            match create_contents(){
+                Ok(_) => println!("\n===== SUCCESSFULLY CREATE TEMPLATE ====="),
+                Err(e) => println!("Error while creating template!\n{}", e)
+            };
         }
     }
-}
-
-fn print_usage() {
-    println!("Usage:");
-    println!("  cargo run -- --pattern='{{\"<package_name>\": \"test_app\"}}'");
-    println!("");
-    println!("Note for Windows CMD:");
-    println!("  cargo run -- --pattern=\"{{\\\"<package_name>\\\": \\\"test_app\\\"}}\"");
-    println!("");
-    println!("Alternative simple format:");
-    println!("  cargo run -- --pattern=\"{{<package_name>: test_app}}\"");
 }
 "#;
 
     fs::write(file_path, new_content.trim_start())?;
     println!("Run main.rs:");
-    println!("  cargo run -- --pattern='{{\"<package_name>\": \"test_app\"}}'");
+    println!("  cargo run -- --pattern='{{\"<the_pattern>\": \"replace_pattern\"}}'");
     println!("");
     println!("For Windows CMD:");
-    println!("  cargo run -- --pattern=\"{{\\\"<package_name>\\\": \\\"test_app\\\"}}\"");
+    println!("  cargo run -- --pattern=\"{{\\\"<the_pattern>\\\": \\\"replace_pattern\\\"}}\"");
     println!("");
     println!("Alternative simple format:");
-    println!("  cargo run -- --pattern=\"{{<package_name>: test_app}}\"");
+    println!("  cargo run -- --pattern=\"{{<the_pattern>: replace_pattern}}\"");
     Ok(())
 }
