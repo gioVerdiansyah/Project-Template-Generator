@@ -25,9 +25,7 @@ This tool allows you to copy a template directory structure and replace placehol
 │   ├── main.rs                 # Main entry point
 │   ├── lib.rs                  # Library exports
 │   ├── templates/              # Generated template code
-│   │   ├── mod.rs
-│   │   ├── contents/           # Generated file content modules
-│   │   └── create_contents.rs  # Generated structure builder
+│   │   ├── example/            # YOUR TEMPLATE HERE
 │   └── utils/                  # Utility functions
 │       ├── mod.rs
 │       ├── create_file.rs      # File creation helper
@@ -122,9 +120,11 @@ After building the project, you can:
 ## How to Create Templates
 
 1. Create a directory structure in `src/templates/example/`
-2. Add files with placeholders like `<placeholder_name>`
-3. Run `cargo run --bin copier_template` to process the template
-4. Use the main application with your desired placeholder values
+2. Add files with placeholders like:
+   `{"val_to_replace": "replace_val"}`
+   Based on JSON.
+4. Run `cargo run --bin copier_template` to process the template
+5. Use the main application with your desired placeholder values
 
 ## Features
 
@@ -144,4 +144,4 @@ To add new utility functions or modify the template processing logic:
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the [MIT License](https://github.com/gioVerdiansyah/Project-Template-Generator/blob/main/LICENSE).
